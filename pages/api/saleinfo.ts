@@ -45,7 +45,7 @@ export default async function handler(
     var soldCond: PipelineStage = {
       $match: {
         checkpoint: checkpoint,
-        date: { $lt: date },
+        date: date,
         saleType: {$exists : true}
       }
     };
