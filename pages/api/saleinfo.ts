@@ -33,35 +33,47 @@ export default async function handler(
     
     var date: Date = new Date(req.query.date.toString());
 
-    var checkpoint = req.query.checkpoint;
+    var {checkpoint, partNo} = req.query;
+
+    var query: any = {
+      checkpoint: checkpoint,
+      ...(partNo ?
+        {
+          partNo: partNo
+        } : {})
+    }
+      
+
+    console.log(query);
 
     var openingCond: PipelineStage = {
       $match: {
-        checkpoint: checkpoint,
         date: { $lt: date },
+        ...query
       }
     };
+    console.log(openingCond);
 
     var soldCond: PipelineStage = {
       $match: {
-        checkpoint: checkpoint,
         date: date,
-        saleType: {$exists : true}
+        saleType: {$exists : true},
+        ...query
       }
     };
 
     var closingCond: PipelineStage = {
       $match: { 
-        checkpoint: checkpoint,
-        date: { $lte: date } 
+        date: { $lte: date },
+        ...query
       }
     };
 
     var receivedCond: PipelineStage = {
       $match: {
-        checkpoint: checkpoint,
         date: date,
-        saleType: {$exists : false}
+        saleType: {$exists : false},
+        ...query
       }
     };
 
@@ -110,9 +122,9 @@ export default async function handler(
       Part.aggregate([
         {
           $match: {
-            checkpoint: checkpoint,
             date: date, 
             saleType: {$exists : true},
+            ...query
           }
         },
         {
@@ -126,9 +138,9 @@ export default async function handler(
       Part.aggregate([
         {
           $match: {
-            checkpoint: checkpoint,
             date: date, 
             saleType: "Counter",
+            ...query
           }
         },
         groupParty, 
@@ -137,9 +149,9 @@ export default async function handler(
       Part.aggregate([
         {
           $match: {
-            checkpoint: checkpoint,
             date: date, 
             saleType: "Workshop",
+            ...query
           }
         },
         groupParty, 
@@ -206,23 +218,23 @@ export default async function handler(
     
     soldCond = {
       $match: {
-        checkpoint: checkpoint,
         date: { 
           $lte: date,
           $gte: new Date(date.getFullYear(), date.getMonth(), 1),
         },
-        saleType: {$exists : true}
+        saleType: {$exists : true},
+        ...query
       }
     };
 
     receivedCond = {
       $match: {
-        checkpoint: checkpoint,
         date: {
           $gte: new Date(date.getFullYear(), date.getMonth(), 1),
           $lte: date
         },
-        saleType: {$exists : false}
+        saleType: {$exists : false},
+        ...query
       }
     };
 
@@ -245,12 +257,12 @@ export default async function handler(
       Part.aggregate([
         {
           $match: {
-            checkpoint: checkpoint,
             date: { 
               $lte: date,
               $gte: new Date(date.getFullYear(), date.getMonth(), 1),
             }, 
             saleType: {$exists : true},
+            ...query
           }
         },
         {
@@ -264,12 +276,12 @@ export default async function handler(
       Part.aggregate([
         {
           $match: {
-            checkpoint: checkpoint,
             date: { 
               $lte: date,
               $gte: new Date(date.getFullYear(), date.getMonth(), 1),
             }, 
             saleType: "Counter",
+            ...query
           }
         },
         groupParty, 
@@ -278,12 +290,12 @@ export default async function handler(
       Part.aggregate([
         {
           $match: {
-            checkpoint: checkpoint,
             date: { 
               $lte: date,
               $gte: new Date(date.getFullYear(), date.getMonth(), 1),
             }, 
             saleType: "Workshop",
+            ...query
           }
         },
         groupParty, 
