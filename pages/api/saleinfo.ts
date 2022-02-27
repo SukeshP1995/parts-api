@@ -43,7 +43,6 @@ export default async function handler(
         } : {})
     }
       
-
     console.log(query);
 
     var openingCond: PipelineStage = {
@@ -117,8 +116,7 @@ export default async function handler(
       Part.aggregate([
         receivedCond, 
         groupParty
-      ]), 
-    
+      ]),
       Part.aggregate([
         {
           $match: {

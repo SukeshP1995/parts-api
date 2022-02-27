@@ -14,7 +14,7 @@ export default async function handler(
       optionsSuccessStatus: 200,
     });
 
-    await Part.updateMany({ partNo: req.query.oldPartNo }, { $set: {partNo: req.query.newPartNo,} });
+    await Part.updateMany({ partNo: req.body.oldPartNo }, { $set: {partNo: req.body.newPartNo,} });
 
     res.status(200).send('success');
   } catch (error) {
