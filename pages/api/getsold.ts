@@ -25,10 +25,8 @@ export default async function handler(
                     x["quantity"] = -x["quantity"];
                     return x;
                   });
-                  
-    console.log(typeof parts);
 
-    res.status(200).send(parts);
+    res.status(200).send(JSON.stringify(parts));
   } catch (error) {
     res.status(502).send(error);
   }
