@@ -28,7 +28,7 @@ export default async function handler(
                     return x;
                   });
     console.log(parts);
-    res.status(200).send(JSON.stringify(parts));
+    res.status(200).send(parts);
   } catch (error) {
     res.status(502).send(error);
   }
