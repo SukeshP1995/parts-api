@@ -14,8 +14,6 @@ export default async function handler(
       optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     });
 
-    console.log(req.query);
-
     var date = req.query.date;
     var checkpoint = req.query.checkpoint;
 
@@ -27,7 +25,9 @@ export default async function handler(
                     x["quantity"] = -x["quantity"];
                     return x;
                   });
-    console.log(parts);
+                  
+    console.log(typeof parts);
+
     res.status(200).send(parts);
   } catch (error) {
     res.status(502).send(error);
