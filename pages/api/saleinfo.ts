@@ -11,7 +11,7 @@ type AggQuan = {
 }
 
 function createPartyQuantityMap(array: any[]) {
-  return Object.assign({}, ...array.map((ele: AggQuan) => {
+  return Object.assign({}, ...array.filter((ele: AggQuan) => ele.quantity != 0).map((ele: AggQuan) => {
     var data: any = {};
     const partNo: string = ele._id.partNo;
     data[partNo] = ele.quantity
@@ -42,16 +42,13 @@ export default async function handler(
           partNo: partNo
         } : {})
     }
-      
-    console.log(query);
-
+    
     var openingCond: PipelineStage = {
       $match: {
         date: { $lt: date },
         ...query
       }
     };
-    console.log(openingCond);
 
     var soldCond: PipelineStage = {
       $match: {
